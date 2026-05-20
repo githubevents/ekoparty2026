@@ -21,15 +21,13 @@
 
 "Serena: The data backs that up. CVE submissions to the GitHub Advisory Database have grown 4x year over year. That's not because researchers got better at finding bugs — though they did. It's because the attack surface is expanding faster than the defenses are.",
 
-"PLACEHOLDER — Serena, add any specific Advisory DB data points or vulnerability category trends you want to highlight here.",
+The Advisory Database trends show that while cross-site scripting remains common, authorization and input validation issues are becoming more prominent, pointing to broader problems around access control and trust boundaries. At the same time, GitHub published 35% more CVEs in 2025 than the previous year and saw a 69% increase in malware advisories compared to 2024, reinforcing the larger pattern: more disclosures, more malicious packages, and a wider spread of vulnerability types.
 
 "Rodolfo: In early 2025, a supply chain attack hit tj-actions slash changed-files. Over 23,000 repositories were compromised through a single GitHub Action that thousands of CI pipelines were already trusting. The attacker didn't need to get into your repo. They just needed to get into a tag you were already pulling at runtime. That was the warning shot.",
 
 "Both, quick orientation: three attacks, all different, same pattern. A vulnerability scanner. A library you depend on. A package you maintain. Each one delivered through the trust you'd already given. Then we'll walk through them.",
 
 "Serena reads the line. The first tool compromised was a vulnerability scanner. Your security tool became the attack vector.",
-
-"PLACEHOLDER — Serena, add any data from your research on the Trivy incident or TeamPCP.",
 
 "Rodolfo: Then came Axios. Axios is a JavaScript HTTP library. Downloaded more than 100 million times a week. It runs in 80% of cloud and code environments. A North Korean threat actor — tracked by Google as UNC1069 — compromised a maintainer's npm account and introduced a malicious dependency. The malicious versions were live for a few hours. With 100 million weekly downloads, a few hours is enough. The payload deployed a backdoor called Waveshaper.v2 across Windows, Linux, and Mac.",
 
@@ -43,8 +41,6 @@
 
 "Serena: The root cause of tj-actions and a lot of what followed is mutable action references. You pin to a tag, the tag moves, your pipeline runs whatever it points to now. Today, do this. Replace the tag with a full commit SHA. The 2026 roadmap will introduce a dependencies block in workflow YAML that locks every action — direct and transitive — to a commit SHA. Think of it as go.sum for your CI pipeline. Deterministic, auditable, no runtime surprises.",
 
-"PLACEHOLDER — Serena, your research perspective on the roadmap. Gaps, what you'd prioritize, anything from Security Lab's view.",
-
 "Rodolfo: Here's what's available right now, today, in your repo. Dependabot — free, on by default. Watches your dependencies and opens PRs when known vulnerabilities are found. I still walk into customer environments with this turned off. Turn it on. Keep up with the PRs. CodeQL — free for open source. Static analysis that runs on every PR. AI-generated code often looks clean on the surface but follows patterns the model learned from vulnerable repos. CodeQL doesn't care that it looks clean. It finds the pattern. Secret scanning — free for public repos, GHAS for private. The most common finding I see is not malicious intent. It's a developer who was moving fast and an API key ended up committed. New this month: push protection now defaults on for Figma, GCP, Langchain, OpenVSX, and PostHog. Cloudflare is now a secret scanning partner.",
 
 "Serena: Now generally available. Secret scanning via the GitHub MCP Server. Your AI coding agent can now scan your code for exposed secrets before you commit — directly from VS Code or Copilot CLI, while you're writing code. Not after the fact in CI. While you write. Dependency scanning via the MCP Server is in public preview. Same idea for vulnerable dependencies. Your agent checks against the Advisory Database before you commit. Returns structured results — affected packages, severity, recommended versions to upgrade to.",
@@ -53,7 +49,8 @@
 
 "Serena: The data is not encouraging in the abstract. CVEs are up. Supply chain attacks are up. The TeamPCP campaigns are still active — the TanStack attack is days old and the blast radius is still expanding. But the tooling is real. Dependency scanning in your agent before you commit is a structural shift. Moving security into the moment of writing, not the moment of review — that's where it has to go.",
 
-"PLACEHOLDER — Serena, close with your honest researcher take. Are we ahead or behind. What's the trajectory.",
+Copilot said: We are handling vulnerabilities at a scale
+We are handling vulnerabilities at a scale we have not seen before, which increases pressure on maintainers and security teams, especially when reports are low-quality or difficult to validate. Tooling has improved meaningfully, but the strongest path forward is still making good security practice practical and accessible through clear reporting, consistent review, strong secret hygiene, and workflows that account for supply chain risk from the start.
 
 "Rodolfo: Three things to do before you leave this room. One: pin your GitHub Actions to commit SHAs, not tags. Two: enable secret scanning and dependency scanning in your MCP server or IDE so your agent catches issues before they commit. Three: if you're on GHAS, turn on Copilot Autofix and the Defender for Cloud runtime filters. Focus on what's actually deployed.",
 
@@ -249,91 +246,6 @@ ul.clean-list li::before {
   background: currentColor;
   opacity: 0.6;
 }
-
-/* ============================================================
-   PDF export button (visible on the thank-you slide)
-   ============================================================ */
-.pdf-export-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  padding: 20px 32px;
-  background: rgba(95,237,131,0.12);
-  border: 1px solid rgba(95,237,131,0.4);
-  border-radius: 12px;
-  color: var(--tool-accent);
-  font-family: var(--font-mono);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-}
-.pdf-export-btn:hover {
-  background: rgba(95,237,131,0.22);
-  border-color: rgba(95,237,131,0.65);
-  transform: translateY(-2px);
-}
-.pdf-export-btn:active { transform: translateY(0); }
-.pdf-export-btn svg { flex-shrink: 0; }
-
-/* ============================================================
-   Print / "Save as PDF" — each slide becomes one 1920×1080 page
-   ============================================================ */
-@media print {
-  @page {
-    size: 1920px 1080px;
-    margin: 0;
-  }
-
-  html, body {
-    background: #0a0d0c !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 1920px !important;
-  }
-
-  deck-stage {
-    display: block !important;
-    position: static !important;
-    width: 1920px !important;
-    height: auto !important;
-    transform: none !important;
-    overflow: visible !important;
-  }
-
-  deck-stage section {
-    display: block !important;
-    position: relative !important;
-    width: 1920px !important;
-    height: 1080px !important;
-    transform: none !important;
-    overflow: hidden !important;
-    page-break-after: always;
-    break-after: page;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-
-  deck-stage section:last-of-type {
-    page-break-after: auto;
-    break-after: auto;
-  }
-
-  /* Hide UI chrome that shouldn't appear in the PDF */
-  .pdf-export-btn,
-  .pdf-export-row,
-  .tweaks-panel,
-  [data-tweaks-panel] {
-    display: none !important;
-  }
-
-  /* Honor deck colors in the printed PDF */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-}
 </style>
 </head>
 <body>
@@ -392,7 +304,7 @@ ul.clean-list li::before {
       </p>
     </div>
   </div>
-  <div class="footer"><span>01 / 24</span><span>EKO · MIA</span></div>
+  <div class="footer"><span>01 / 21</span><span>EKO · MIA</span></div>
 </section>
 
 <!-- ============================================================
@@ -426,7 +338,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer"><span>02 / 24</span><span>EKO · MIA</span></div>
+  <div class="footer"><span>02 / 21</span><span>EKO · MIA</span></div>
 </section>
 
 
@@ -461,7 +373,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer"><span>03 / 24</span><span>EKO · MIA</span></div>
+  <div class="footer"><span>03 / 21</span><span>EKO · MIA</span></div>
 </section>
 
 
@@ -487,13 +399,13 @@ ul.clean-list li::before {
       </p>
     </div>
   </div>
-  <div class="footer"><span>04 / 24</span><span>EKO · MIA</span></div>
+  <div class="footer"><span>04 / 21</span><span>EKO · MIA</span></div>
 </section>
 
 <!-- ============================================================
      08 — PLACEHOLDER (Serena, Advisory DB data)
      ============================================================ -->
-<section data-label="06 Placeholder Advisory DB">
+<!-- <section data-label="06 Placeholder Advisory DB">
   <div class="bg-grain dark"></div>
   <div class="frame" style="justify-content:center;">
     <header class="chrome"><div class="brand"><svg width="22" height="22"><use href="#i-github"/></svg><span>GitHub</span></div><div class="track" style="color:#F4A876">Placeholder · Serena</div></header>
@@ -512,7 +424,53 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer"><span>05 / 24</span><span>EKO · MIA</span></div>
+  <div class="footer"><span>05 / 21</span><span>EKO · MIA</span></div>
+</section> -->
+
+
+
+<section data-label="06 Advisory DB">
+  <div class="bg-grain dark"></div>
+  <div class="frame">
+    <header class="chrome"><div class="brand"><svg width="22" height="22"><use href="#i-github"/></svg><span>GitHub</span></div><div class="track">Advisory DB Data</div></header>
+
+    <div style="margin-top:96px;">
+      <div class="eyebrow" style="color:#7B8C9B; margin-bottom:36px">Advisory DB Data</div>
+      <h2 class="t-large" style="font-size:88px; max-width:1500px; line-height:1.08; letter-spacing:-0.03em;">Vunerability Trends</h2>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-top:auto; margin-bottom:32px;">
+      <div style="padding:44px; background:rgba(254,200,76,0.06); border:1px solid rgba(254,200,76,0.35)); border-radius:16px;">
+        <div class="mono" style="color:var(--threat-accent-2); font-size:14px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:28px; font-weight:600;">CVE</div>
+
+        <div style="width: 100%; margin: 0 auto;">
+            
+            <!-- The image style makes it responsive to that container -->
+            <img src="img0.png" 
+                alt="Description of image" 
+                style="width: 100%; max-width: 100%; height: auto; display: block;">
+
+          </div>
+        <!-- <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
+          <li class="t-body" style="font-size:28px; color:#fff; padding-left:28px; position:relative; line-height:1.5;"><span style="position:absolute; left:0; color:var(--threat-accent-2); font-weight:bold;">•</span>GitHub had a 35% increase from 2024 to 2025 in CVE Publication</li>
+          <li class="t-body" style="font-size:28px; color:#fff; padding-left:28px; position:relative; line-height:1.5;"><span style="position:absolute; left:0; color:var(--threat-accent-2); font-weight:bold;">•</span>Supply chain attacks are up.</li>
+          <li class="t-body" style="font-size:28px; color:#fff; padding-left:28px; position:relative; line-height:1.5;"><span style="position:absolute; left:0; color:var(--threat-accent-2); font-weight:bold;">•</span>TeamPCP campaigns are still active. The TanStack blast radius is still expanding.</li>
+        </ul> -->
+      </div>
+      <div style="padding:44px; background:rgba(254,200,76,0.06); border:1px solid rgba(254,200,76,0.35)); border-radius:16px;">
+        <div class="mono" style="color:var(--tool-accent); font-size:14px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:28px; font-weight:600;">Malware</div>
+          <div style="width: 100%; margin: 0 auto;">
+            
+            <!-- The image style makes it responsive to that container -->
+            <img src="img1.png" 
+                alt="Description of image" 
+                style="width: 100%; max-width: 100%; height: auto; display: block;">
+
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>05 / 21</span><span>EKO · MIA</span></div>
 </section>
 
 
@@ -539,7 +497,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>06 / 24</span><span>THREAT</span></div>
+  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>06 / 21</span><span>THREAT</span></div>
 </section>
 
 
@@ -601,7 +559,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>07 / 24</span><span>THREAT</span></div>
+  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>07 / 21</span><span>THREAT</span></div>
 </section>
 
 
@@ -621,13 +579,13 @@ ul.clean-list li::before {
       <div class="t-small" style="font-size:24px; margin-top:56px; color:#7B8C9B; font-family:var(--font-mono); letter-spacing:0.06em; text-transform:uppercase;">— Serena</div>
     </div>
   </div>
-  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>08 / 24</span><span>THREAT</span></div>
+  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>08 / 21</span><span>THREAT</span></div>
 </section>
 
 <!-- ============================================================
      15 — PLACEHOLDER (TeamPCP)
      ============================================================ -->
-<section data-label="10 Placeholder TeamPCP">
+<!-- <section data-label="10 Placeholder TeamPCP">
   <div class="bg-radial-blue"></div>
   <div class="bg-grain blue" style="opacity:0.3;"></div>
   <div class="frame" style="justify-content:center;">
@@ -635,20 +593,19 @@ ul.clean-list li::before {
 
     <div style="max-width:1500px; align-self:center; width:100%;">
       <div class="placeholder-card">
-        <div class="ph-label">Placeholder · TeamPCP research</div>
-        <div class="eyebrow" style="color:#F4A876; margin-bottom:24px">For Serena to fill in</div>
-        <h2 class="t-medium" style="font-size:52px; color:#fff;">Inside TeamPCP &amp; the Trivy incident</h2>
-        <p class="t-body" style="font-size:28px; margin-top:28px; color:#B0BAC3;">
-          Your research on TeamPCP. Could include: campaign timeline, infrastructure overlap with other actors, TTPs, IOCs you want to share, what GitHub Security Lab has been tracking, or what you'd tell defenders to watch for.
-        </p>
-        <div class="mono" style="margin-top:36px; color:#F4A876; font-size:18px; letter-spacing:0.08em; text-transform:uppercase;">
-          TODO before Ekoparty
-        </div>
+        <h2 class="t-medium" style="font-size:52px; color:#fff;">Inside TeamPCP & the Trivy Incident</h2>
+      </br>
+        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
+          <li class="t-body" style="font-size:28px; color:#fff; padding-left:28px; position:relative; line-height:1.5;"><span style="position:absolute; left:0; color:var(--threat-accent-2); font-weight:bold;">•</span>TeamPCP first tracked in late 2025</li>
+          <li class="t-body" style="font-size:28px; color:#fff; padding-left:28px; position:relative; line-height:1.5;"><span style="position:absolute; left:0; color:var(--threat-accent-2); font-weight:bold;">•</span>In March 2026, the actor compromised Trivy release paths</li>
+          <li class="t-body" style="font-size:28px; color:#fff; padding-left:28px; position:relative; line-height:1.5;"><span style="position:absolute; left:0; color:var(--threat-accent-2); font-weight:bold;">•</span>Malicious code was pushed into trusted artifacts and GitHub Actions</li>
+        </ul>
       </div>
     </div>
+
   </div>
-  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>09 / 24</span><span>THREAT</span></div>
-</section>
+  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>09 / 21</span><span>THREAT</span></div>
+</section> -->
 
 <!-- ============================================================
      16 — AXIOS DETAIL
@@ -694,7 +651,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>10 / 24</span><span>THREAT</span></div>
+  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>09 / 21</span><span>THREAT</span></div>
 </section>
 
 <!-- ============================================================
@@ -738,7 +695,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>11 / 24</span><span>THREAT</span></div>
+  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>10 / 21</span><span>THREAT</span></div>
 </section>
 
 <!-- ============================================================
@@ -777,7 +734,7 @@ ul.clean-list li::before {
       </p>
     </div>
   </div>
-  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>12 / 24</span><span>THREAT</span></div>
+  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>11 / 21</span><span>THREAT</span></div>
 </section>
 
 
@@ -803,7 +760,7 @@ ul.clean-list li::before {
       </p>
     </div>
   </div>
-  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>13 / 24</span><span>THREAT</span></div>
+  <div class="footer" style="color:rgba(158,236,255,0.45)"><span>12 / 21</span><span>THREAT</span></div>
 </section>
 
 <!-- ============================================================
@@ -826,7 +783,7 @@ ul.clean-list li::before {
       </p>
     </div>
   </div>
-  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>14 / 24</span><span>TOOLING</span></div>
+  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>13 / 21</span><span>TOOLING</span></div>
 </section>
 
 <!-- ============================================================
@@ -861,14 +818,14 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>15 / 24</span><span>TOOLING</span></div>
+  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>14 / 21</span><span>TOOLING</span></div>
 </section>
 
 
 <!-- ============================================================
      24 — PLACEHOLDER (Serena roadmap take)
      ============================================================ -->
-<section data-label="17 Placeholder roadmap take">
+<!-- <section data-label="17 Placeholder roadmap take">
   <div class="bg-radial-green"></div>
   <div class="frame" style="justify-content:center;">
     <header class="chrome"><div class="brand"><svg width="22" height="22"><use href="#i-github"/></svg><span>GitHub</span></div><div class="track" style="color:#F4A876">Placeholder · Serena</div></header>
@@ -888,7 +845,7 @@ ul.clean-list li::before {
     </div>
   </div>
   <div class="footer" style="color:rgba(140,242,169,0.45)"><span>16 / 24</span><span>TOOLING</span></div>
-</section>
+</section> -->
 
 <!-- ============================================================
      25 — AVAILABLE TODAY (Dependabot, CodeQL, Secret scanning)
@@ -937,7 +894,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>17 / 24</span><span>TOOLING</span></div>
+  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>15 / 21</span><span>TOOLING</span></div>
 </section>
 
 <!-- ============================================================
@@ -986,7 +943,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>18 / 24</span><span>TOOLING</span></div>
+  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>16 / 21</span><span>TOOLING</span></div>
 </section>
 
 <!-- ============================================================
@@ -1052,7 +1009,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>19 / 24</span><span>TOOLING</span></div>
+  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>17 / 21</span><span>TOOLING</span></div>
 </section>
 
 
@@ -1088,7 +1045,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer"><span>20 / 24</span><span>EKO · MIA</span></div>
+  <div class="footer"><span>18 / 21</span><span>EKO · MIA</span></div>
 </section>
 
 <!-- ============================================================
@@ -1097,23 +1054,24 @@ ul.clean-list li::before {
 <section data-label="22 Placeholder closing take">
   <div class="bg-grain dark"></div>
   <div class="frame" style="justify-content:center;">
-    <header class="chrome"><div class="brand"><svg width="22" height="22"><use href="#i-github"/></svg><span>GitHub</span></div><div class="track" style="color:#F4A876">Placeholder · Serena</div></header>
-
     <div style="max-width:1500px; align-self:center; width:100%;">
       <div class="placeholder-card">
-        <div class="ph-label">Placeholder · Researcher's take</div>
-        <div class="eyebrow" style="color:#F4A876; margin-bottom:24px">For Serena to fill in</div>
+        <div class="eyebrow" style="color:#F4A876; margin-bottom:24px">The progress is real, but so is the strain.</div>
         <h2 class="t-medium" style="font-size:52px; color:#fff;">Are we ahead or behind?</h2>
-        <p class="t-body" style="font-size:28px; margin-top:28px; color:#B0BAC3;">
+        <!-- <p class="t-body" style="font-size:28px; margin-top:28px; color:#B0BAC3;">
           Your honest closing take. The trajectory. What you're optimistic about and what still keeps you up. Make it personal — the audience came for the researcher's view.
-        </p>
-        <div class="mono" style="margin-top:36px; color:#F4A876; font-size:18px; letter-spacing:0.08em; text-transform:uppercase;">
-          TODO before Ekoparty
-        </div>
+        </p> -->
+      </br>
+        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:20px;">
+          <li class="t-body" style="font-size:28px; color:#fff; padding-left:28px; position:relative; line-height:1.5;"><span style="position:absolute; left:0; color:var(--tool-accent); font-weight:bold;">•</span>More vulnerabilities are being surfaced than ever before.</li>
+          <li class="t-body" style="font-size:28px; color:#fff; padding-left:28px; position:relative; line-height:1.5;"><span style="position:absolute; left:0; color:var(--tool-accent); font-weight:bold;">•</span>Better tooling is improving early detection and response.</li>
+          <li class="t-body" style="font-size:28px; color:#fff; padding-left:28px; position:relative; line-height:1.5;"><span style="position:absolute; left:0; color:var(--tool-accent); font-weight:bold;">•</span>Volume, triage pressure, and low-quality reports still create drag.</li>
+          <li class="t-body" style="font-size:28px; color:#fff; padding-left:28px; position:relative; line-height:1.5;"><span style="position:absolute; left:0; color:var(--tool-accent); font-weight:bold;">•</span>Strong security practice must be practical, clear, and accessible.</li>
+        </ul>
       </div>
     </div>
   </div>
-  <div class="footer"><span>21 / 24</span><span>EKO · MIA</span></div>
+  <div class="footer"><span>19 / 21</span><span>EKO · MIA</span></div>
 </section>
 
 <!-- ============================================================
@@ -1156,7 +1114,7 @@ ul.clean-list li::before {
       </div>
     </div>
   </div>
-  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>22 / 24</span><span>TOOLING</span></div>
+  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>20 / 21</span><span>TOOLING</span></div>
 </section>
 
 <!-- ============================================================
@@ -1190,21 +1148,11 @@ ul.clean-list li::before {
       </div>
     </div>
 
-    <div class="pdf-export-row" style="margin-top:48px; display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap;">
-      <div class="t-small" style="font-size:24px; color:#8CF2A9; font-family:var(--font-mono); letter-spacing:0.04em;">
-        We're around after. Come find us.
-      </div>
-      <button type="button" class="pdf-export-btn" onclick="window.print()" aria-label="Download this deck as a PDF">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        <span>Download deck as PDF</span>
-      </button>
+    <div class="t-small" style="font-size:24px; margin-top:48px; color:#8CF2A9; font-family:var(--font-mono); letter-spacing:0.04em;">
+      We're around after. Come find us.
     </div>
   </div>
-  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>23 / 24</span><span>EKO · MIA · 2026</span></div>
+  <div class="footer" style="color:rgba(140,242,169,0.45)"><span>21 / 21</span><span>EKO · MIA · 2026</span></div>
 </section>
 
 </deck-stage>
