@@ -6,8 +6,8 @@ Slide deck for the talk **"Code Security in the AI Era"** at [Ekoparty Miami 202
 
 ## Speakers
 
-- **Serena Conticello** — Security Researcher, GitHub Advisory Database
-- **Rodolfo Sarmiento** — Senior Customer Success Architect, GitHub
+- **Rodolfo Sarmiento** — Senior Customer Success Architect, GitHub _(presenter)_
+- **Serena Conticello** — Security Researcher, GitHub Advisory Database _(co-author, not presenting in person)_
 
 ## About the talk
 

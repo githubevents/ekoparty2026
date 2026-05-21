@@ -13,48 +13,47 @@
 [
 "Rodolfo opens. Welcome the room, set the tone, say where you're from. Keep it short — the next slide is the real opener.",
 
-"Rodolfo asks the room. Pause after each question. Let the second question land. Then: that gap is what this talk is about. I'm Rodolfo, Senior Customer Success Architect at GitHub. I work with engineering teams every day. I see what they're shipping, how fast they're moving, and what they skip when they're under pressure. Hand off to Serena.",
+"Ask the room. Pause after each question. Let the second question land. Then: that gap is what this talk is about. I'm Rodolfo, Senior Customer Success Architect at GitHub. I work with engineering teams every day — what they're shipping, how fast they're moving, what they skip under pressure.",
 
-"Serena: I'm Serena, security researcher at GitHub. I work on the GitHub Advisory Database. I see what actually breaks — at scale, across the open source ecosystem. Rodolfo: Between the two of us, we have the full picture. What's happening inside teams, and what's showing up in the vulnerability data afterward.",
+"Context on the other side of the picture: the GitHub Advisory Database tracks what actually breaks at scale across the open source ecosystem. The research behind this talk comes from Serena Conticello on that team — she couldn't make it in person today, so I'm taking us through the whole thing. Between what I see inside teams and what shows up in the vulnerability data afterward, that's the full picture we'll walk.",
 
-"Rodolfo: There's a category of developer that keeps coming up in these conversations. People are calling them vibe coders. Someone using AI to build things they genuinely couldn't build before. Sometimes a junior dev moving faster than their experience level. Sometimes a PM or a founder who realized they can just describe what they want and get working code back. They're not malicious. They're moving fast and trusting the output. And the code looks clean. It passes lint. It passes tests. It follows patterns the model learned from millions of repos — including a lot of repos with vulnerabilities baked in.",
+"There's a category of developer that keeps coming up in these conversations. People are calling them vibe coders. Someone using AI to build things they genuinely couldn't build before. Sometimes a junior dev moving faster than their experience level. Sometimes a PM or a founder who realized they can just describe what they want and get working code back. They're not malicious. They're moving fast and trusting the output. And the code looks clean. It passes lint. It passes tests. It follows patterns the model learned from millions of repos — including a lot of repos with vulnerabilities baked in.",
 
-"Serena: The data backs that up. CVE submissions to the GitHub Advisory Database have grown 4x year over year. That's not because researchers got better at finding bugs — though they did. It's because the attack surface is expanding faster than the defenses are.",
+"The data backs that up. CVE submissions to the GitHub Advisory Database have grown 4x year over year. That's not because researchers got better at finding bugs — though they did. It's because the attack surface is expanding faster than the defenses are.",
 
-The Advisory Database trends show that while cross-site scripting remains common, authorization and input validation issues are becoming more prominent, pointing to broader problems around access control and trust boundaries. At the same time, GitHub published 35% more CVEs in 2025 than the previous year and saw a 69% increase in malware advisories compared to 2024, reinforcing the larger pattern: more disclosures, more malicious packages, and a wider spread of vulnerability types.
+"The Advisory Database trends show that while cross-site scripting remains common, authorization and input validation issues are becoming more prominent, pointing to broader problems around access control and trust boundaries. At the same time, GitHub published 35% more CVEs in 2025 than the previous year and saw a 69% increase in malware advisories compared to 2024, reinforcing the larger pattern: more disclosures, more malicious packages, and a wider spread of vulnerability types.",
 
-"Rodolfo: In early 2025, a supply chain attack hit tj-actions slash changed-files. Over 23,000 repositories were compromised through a single GitHub Action that thousands of CI pipelines were already trusting. The attacker didn't need to get into your repo. They just needed to get into a tag you were already pulling at runtime. That was the warning shot.",
+"In early 2025, a supply chain attack hit tj-actions slash changed-files. Over 23,000 repositories were compromised through a single GitHub Action that thousands of CI pipelines were already trusting. The attacker didn't need to get into your repo. They just needed to get into a tag you were already pulling at runtime. That was the warning shot.",
 
-"Both, quick orientation: three attacks, all different, same pattern. A vulnerability scanner. A library you depend on. A package you maintain. Each one delivered through the trust you'd already given. Then we'll walk through them.",
+"Quick orientation: three attacks, all different, same pattern. A vulnerability scanner. A library you depend on. A package you maintain. Each one delivered through the trust you'd already given. Then we'll walk through them.",
 
-"Serena reads the line. The first tool compromised was a vulnerability scanner. Your security tool became the attack vector.",
+"Read the line slowly. The first tool compromised was a vulnerability scanner. Your security tool became the attack vector.",
 
-"Rodolfo: Then came Axios. Axios is a JavaScript HTTP library. Downloaded more than 100 million times a week. It runs in 80% of cloud and code environments. A North Korean threat actor — tracked by Google as UNC1069 — compromised a maintainer's npm account and introduced a malicious dependency. The malicious versions were live for a few hours. With 100 million weekly downloads, a few hours is enough. The payload deployed a backdoor called Waveshaper.v2 across Windows, Linux, and Mac.",
+"Then came Axios. Axios is a JavaScript HTTP library. Downloaded more than 100 million times a week. It runs in 80% of cloud and code environments. A North Korean threat actor — tracked by Google as UNC1069 — compromised a maintainer's npm account and introduced a malicious dependency. The malicious versions were live for a few hours. With 100 million weekly downloads, a few hours is enough. The payload deployed a backdoor called Waveshaper.v2 across Windows, Linux, and Mac.",
 
-"Serena: And then last week, Mini Shai-Hulud. TeamPCP hit TanStack, UiPath, and MistralAI. TanStack's React Router alone has 12 million weekly downloads. query-core has 220 million monthly downloads. In six minutes — between 19:20 and 19:26 UTC on a single Monday — the attacker published 84 malicious versions across 42 TanStack packages.",
+"And then last week, Mini Shai-Hulud. TeamPCP hit TanStack, UiPath, and MistralAI. TanStack's React Router alone has 12 million weekly downloads. query-core has 220 million monthly downloads. In six minutes — between 19:20 and 19:26 UTC on a single Monday — the attacker published 84 malicious versions across 42 TanStack packages.",
 
-"Serena: The malware steals your credentials. Then it self-propagates to other packages you maintain. And if you try to rotate the stolen tokens, it runs r-m dash r-f tilde slash. It wipes your home directory as a dead-man's switch. Rotating your credentials triggers the bomb.",
+"The malware steals your credentials. Then it self-propagates to other packages you maintain. And if you try to rotate the stolen tokens, it runs r-m dash r-f tilde slash. It wipes your home directory as a dead-man's switch. Rotating your credentials triggers the bomb.",
 
-"Rodolfo: The attacker didn't hack OpenAI. They hacked a library OpenAI used. That's the whole threat model in one sentence. Your code is only as secure as every package it depends on, every action your CI pipeline runs, every tool in your build chain. You're not just responsible for the code you write. You're responsible for the code you trust.",
+"The attacker didn't hack OpenAI. They hacked a library OpenAI used. That's the whole threat model in one sentence. Your code is only as secure as every package it depends on, every action your CI pipeline runs, every tool in your build chain. You're not just responsible for the code you write. You're responsible for the code you trust.",
 
-"Serena: So what do you actually do about this? GitHub has been shipping fast on exactly this problem. Let me walk through what's available.",
+"So what do you actually do about this? GitHub has been shipping fast on exactly this problem. Let me walk through what's available.",
 
-"Serena: The root cause of tj-actions and a lot of what followed is mutable action references. You pin to a tag, the tag moves, your pipeline runs whatever it points to now. Today, do this. Replace the tag with a full commit SHA. The 2026 roadmap will introduce a dependencies block in workflow YAML that locks every action — direct and transitive — to a commit SHA. Think of it as go.sum for your CI pipeline. Deterministic, auditable, no runtime surprises.",
+"The root cause of tj-actions and a lot of what followed is mutable action references. You pin to a tag, the tag moves, your pipeline runs whatever it points to now. Today, do this. Replace the tag with a full commit SHA. The 2026 roadmap will introduce a dependencies block in workflow YAML that locks every action — direct and transitive — to a commit SHA. Think of it as go.sum for your CI pipeline. Deterministic, auditable, no runtime surprises.",
 
-"Rodolfo: Here's what's available right now, today, in your repo. Dependabot — free, on by default. Watches your dependencies and opens PRs when known vulnerabilities are found. I still walk into customer environments with this turned off. Turn it on. Keep up with the PRs. CodeQL — free for open source. Static analysis that runs on every PR. AI-generated code often looks clean on the surface but follows patterns the model learned from vulnerable repos. CodeQL doesn't care that it looks clean. It finds the pattern. Secret scanning — free for public repos, GHAS for private. The most common finding I see is not malicious intent. It's a developer who was moving fast and an API key ended up committed. New this month: push protection now defaults on for Figma, GCP, Langchain, OpenVSX, and PostHog. Cloudflare is now a secret scanning partner.",
+"Here's what's available right now, today, in your repo. Dependabot — free, on by default. Watches your dependencies and opens PRs when known vulnerabilities are found. I still walk into customer environments with this turned off. Turn it on. Keep up with the PRs. CodeQL — free for open source. Static analysis that runs on every PR. AI-generated code often looks clean on the surface but follows patterns the model learned from vulnerable repos. CodeQL doesn't care that it looks clean. It finds the pattern. Secret scanning — free for public repos, GHAS for private. The most common finding I see is not malicious intent. It's a developer who was moving fast and an API key ended up committed. New this month: push protection now defaults on for Figma, GCP, Langchain, OpenVSX, and PostHog. Cloudflare is now a secret scanning partner.",
 
-"Serena: Now generally available. Secret scanning via the GitHub MCP Server. Your AI coding agent can now scan your code for exposed secrets before you commit — directly from VS Code or Copilot CLI, while you're writing code. Not after the fact in CI. While you write. Dependency scanning via the MCP Server is in public preview. Same idea for vulnerable dependencies. Your agent checks against the Advisory Database before you commit. Returns structured results — affected packages, severity, recommended versions to upgrade to.",
+"Now generally available. Secret scanning via the GitHub MCP Server. Your AI coding agent can now scan your code for exposed secrets before you commit — directly from VS Code or Copilot CLI, while you're writing code. Not after the fact in CI. While you write. Dependency scanning via the MCP Server is in public preview. Same idea for vulnerable dependencies. Your agent checks against the Advisory Database before you commit. Returns structured results — affected packages, severity, recommended versions to upgrade to.",
 
-"Rodolfo: Copilot Autofix. When CodeQL finds a vulnerability, Copilot Autofix suggests the fix inline. Not just flags it — shows you the code change and explains why. Three times faster than manual remediation on average. Twelve times faster for SQL injection. It's a PR suggestion you accept, edit, or reject. You stay in control. Serena: And the newest piece — code-to-cloud risk visibility with Microsoft Defender for Cloud, now GA. GHAS now supports runtime context filters. You can filter alerts by deployment status and runtime risk — internet-exposed, sensitive-data access. So instead of triaging every CodeQL alert, you focus on the ones that are actually deployed and reachable from the internet.",
+"Copilot Autofix. When CodeQL finds a vulnerability, Copilot Autofix suggests the fix inline. Not just flags it — shows you the code change and explains why. Three times faster than manual remediation on average. Twelve times faster for SQL injection. It's a PR suggestion you accept, edit, or reject. You stay in control. And the newest piece — code-to-cloud risk visibility with Microsoft Defender for Cloud, now GA. GHAS now supports runtime context filters. You can filter alerts by deployment status and runtime risk — internet-exposed, sensitive-data access. So instead of triaging every CodeQL alert, you focus on the ones that are actually deployed and reachable from the internet.",
 
-"Serena: The data is not encouraging in the abstract. CVEs are up. Supply chain attacks are up. The TeamPCP campaigns are still active — the TanStack attack is days old and the blast radius is still expanding. But the tooling is real. Dependency scanning in your agent before you commit is a structural shift. Moving security into the moment of writing, not the moment of review — that's where it has to go.",
+"The data is not encouraging in the abstract. CVEs are up. Supply chain attacks are up. The TeamPCP campaigns are still active — the TanStack attack is days old and the blast radius is still expanding. But the tooling is real. Dependency scanning in your agent before you commit is a structural shift. Moving security into the moment of writing, not the moment of review — that's where it has to go.",
 
-Copilot said: We are handling vulnerabilities at a scale
-We are handling vulnerabilities at a scale we have not seen before, which increases pressure on maintainers and security teams, especially when reports are low-quality or difficult to validate. Tooling has improved meaningfully, but the strongest path forward is still making good security practice practical and accessible through clear reporting, consistent review, strong secret hygiene, and workflows that account for supply chain risk from the start.
+"We are handling vulnerabilities at a scale we have not seen before, which increases pressure on maintainers and security teams, especially when reports are low-quality or difficult to validate. Tooling has improved meaningfully, but the strongest path forward is still making good security practice practical and accessible through clear reporting, consistent review, strong secret hygiene, and workflows that account for supply chain risk from the start.",
 
-"Rodolfo: Three things to do before you leave this room. One: pin your GitHub Actions to commit SHAs, not tags. Two: enable secret scanning and dependency scanning in your MCP server or IDE so your agent catches issues before they commit. Three: if you're on GHAS, turn on Copilot Autofix and the Defender for Cloud runtime filters. Focus on what's actually deployed.",
+"Three things to do before you leave this room. One: pin your GitHub Actions to commit SHAs, not tags. Two: enable secret scanning and dependency scanning in your MCP server or IDE so your agent catches issues before they commit. Three: if you're on GHAS, turn on Copilot Autofix and the Defender for Cloud runtime filters. Focus on what's actually deployed.",
 
-"Serena: If you're maintaining open source packages — enable push protection. The attacks we talked about today went through maintainer accounts. Your package is infrastructure. Treat it that way. We're around after. Come find us."
+"If you're maintaining open source packages — enable push protection. The attacks we talked about today went through maintainer accounts. Your package is infrastructure. Treat it that way. Big thanks to Serena Conticello — her Advisory Database research is the backbone of what we just walked through. I'm around after. Come find me."
 ]
 </script>
 
@@ -272,11 +271,7 @@ ul.clean-list li::before {
       </h1>
     </div>
 
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:96px; margin-top:96px; max-width:1500px;">
-      <div>
-        <div class="t-medium" style="font-size:36px; font-weight:700; font-stretch:115%; letter-spacing:-0.02em;">Serena Conticello</div>
-        <div class="t-small" style="font-size:22px; margin-top:12px; letter-spacing:-0.003em;">Security Researcher · GitHub Advisory Database</div>
-      </div>
+    <div style="margin-top:96px; max-width:1500px;">
       <div>
         <div class="t-medium" style="font-size:36px; font-weight:700; font-stretch:115%; letter-spacing:-0.02em;">Rodolfo Sarmiento</div>
         <div class="t-small" style="font-size:22px; margin-top:12px; letter-spacing:-0.003em;">Senior Customer Success Architect · GitHub</div>
@@ -316,25 +311,16 @@ ul.clean-list li::before {
     <header class="chrome"><div class="brand"><svg width="22" height="22"><use href="#i-github"/></svg><span>GitHub</span></div></header>
 
     <div style="margin-top:auto;">
-      <div class="eyebrow" style="color:#7B8C9B; margin-bottom:32px">Who we are</div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:104px; align-items:start;">
-        <div>
-          <div style="height:8px; width:84px; background:var(--gh-orange-3); margin-bottom:40px; border-radius:2px;"></div>
-          <div class="t-large" style="font-size:84px; letter-spacing:-0.03em;">Rodolfo</div>
-          <div class="t-body" style="font-size:28px; margin-top:28px; color:#B0BAC3; max-width:680px; line-height:1.6;">
-            Senior Customer Success Architect at GitHub. I sit with engineering teams every day — what they're shipping, how fast, what they skip.
-          </div>
-        </div>
-        <div>
-          <div style="height:8px; width:84px; background:var(--gh-blue-2); margin-bottom:40px; border-radius:2px;"></div>
-          <div class="t-large" style="font-size:84px; letter-spacing:-0.03em;">Serena</div>
-          <div class="t-body" style="font-size:28px; margin-top:28px; color:#B0BAC3; max-width:680px; line-height:1.6;">
-            Security researcher on the GitHub Advisory Database. I see what breaks — at scale, across the open source ecosystem.
-          </div>
+      <div class="eyebrow" style="color:#7B8C9B; margin-bottom:32px">Who I am</div>
+      <div style="max-width:1500px;">
+        <div style="height:8px; width:84px; background:var(--gh-orange-3); margin-bottom:40px; border-radius:2px;"></div>
+        <div class="t-large" style="font-size:84px; letter-spacing:-0.03em;">Rodolfo</div>
+        <div class="t-body" style="font-size:28px; margin-top:28px; color:#B0BAC3; max-width:1100px; line-height:1.6;">
+          Senior Customer Success Architect at GitHub. I sit with engineering teams every day — what they're shipping, how fast, what they skip.
         </div>
       </div>
       <div class="t-body" style="font-size:28px; margin-top:80px; color:#7B8C9B; max-width:1500px; line-height:1.6;">
-        Between us: what's happening inside teams, and what shows up in the vulnerability data after.
+        What I see inside teams. What the GitHub Advisory Database sees across the ecosystem. Both shape what we'll cover today — with research from <span style="color:#B0BAC3;">Serena Conticello</span>, who couldn't make it in person.
       </div>
     </div>
   </div>
@@ -576,7 +562,6 @@ ul.clean-list li::before {
       <blockquote style="font-family:var(--font-display); font-weight:700; font-stretch:125%; font-size:88px; line-height:1.08; letter-spacing:-0.03em; color:#fff;">
         Your <span style="color:var(--threat-accent-2)">security tool</span> became the <span style="color:var(--threat-accent-2)">attack vector.</span>
       </blockquote>
-      <div class="t-small" style="font-size:24px; margin-top:56px; color:#7B8C9B; font-family:var(--font-mono); letter-spacing:0.06em; text-transform:uppercase;">— Serena</div>
     </div>
   </div>
   <div class="footer" style="color:rgba(158,236,255,0.45)"><span>08 / 21</span><span>THREAT</span></div>
@@ -1135,21 +1120,19 @@ ul.clean-list li::before {
       <div class="t-medium" style="font-size:44px; color:#fff; line-height:1.15; letter-spacing:-0.02em;">Enable push protection. Your package is infrastructure — treat it that way.</div>
     </div>
 
-    <div style="margin-top:auto; display:grid; grid-template-columns:1fr 1fr; gap:96px; padding-top:56px;">
+    <div style="margin-top:auto; padding-top:56px;">
       <div>
         <div style="height:8px; width:64px; background:var(--gh-orange-3); margin-bottom:24px; border-radius:2px;"></div>
         <div class="t-medium" style="font-size:40px; font-weight:700; letter-spacing:-0.02em;">Rodolfo Sarmiento</div>
         <div class="t-small" style="font-size:22px; margin-top:12px; line-height:1.4;">Senior Customer Success Architect · GitHub</div>
       </div>
-      <div>
-        <div style="height:8px; width:64px; background:var(--gh-blue-2); margin-bottom:24px; border-radius:2px;"></div>
-        <div class="t-medium" style="font-size:40px; font-weight:700; letter-spacing:-0.02em;">Serena Conticello</div>
-        <div class="t-small" style="font-size:22px; margin-top:12px; line-height:1.4;">Security Researcher · GitHub Advisory Database</div>
+      <div class="t-small" style="font-size:20px; margin-top:24px; color:#7B8C9B; line-height:1.4;">
+        Research and co-authorship: Serena Conticello, GitHub Advisory Database.
       </div>
     </div>
 
     <div class="t-small" style="font-size:24px; margin-top:48px; color:#8CF2A9; font-family:var(--font-mono); letter-spacing:0.04em;">
-      We're around after. Come find us.
+      I'm around after. Come find me.
     </div>
   </div>
   <div class="footer" style="color:rgba(140,242,169,0.45)"><span>21 / 21</span><span>EKO · MIA · 2026</span></div>
