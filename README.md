@@ -38,6 +38,10 @@ The final slide includes a **Download deck as PDF** button. It triggers `window.
 
 Tested in Chrome and Edge. For best results, set margins to **None** and enable **Background graphics** in the print dialog (this is on by default in most Chromium browsers).
 
+## PowerPoint version
+
+A PowerPoint export of the deck lives at [`code-security-in-the-ai-era-ekoparty-miami-2026.pptx`](./code-security-in-the-ai-era-ekoparty-miami-2026.pptx). Each slide is a 1920×1080 image rendered from the live HTML deck, with speaker notes attached. Regenerate after design changes by re-running the screenshot + pack pipeline (see the deck source above).
+
 ## Project structure
 
 ```
